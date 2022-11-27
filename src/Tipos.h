@@ -10,8 +10,7 @@
 #include <map>
 #include <list>
 #include <vector>
-#include "string_map.h"
-#include "utility"
+
 using namespace std;
 
 using Nat = unsigned int;
@@ -25,8 +24,6 @@ using IdCliente = Nat;
 using Ocurrencia = set<tuple<Nat, Nat, Letra>>;
 
 using Palabra = vector<Letra>;
-
-using trie = string_map<int>;
 
 using Abecedario = vector<Letra>;
 

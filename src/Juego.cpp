@@ -1,12 +1,6 @@
+#include "Juego.h"
 
-#include "Tipos.h"
-#include "juego.h"
-#include "variante.h"
-#include "servidor.h"
-
-
-
-juego::Tablero juego::crearTablero(Nat tamano) {
+Juego::Tablero Juego::crearTablero(Nat tamano) {
     Casillero casillero;
     casillero.letra = ' ';
     casillero.turnoJugado = 0;
@@ -19,7 +13,7 @@ juego::Tablero juego::crearTablero(Nat tamano) {
     return tablero;
 }
 
-juego::Jugadores juego::repartirFichas(variante v, Nat cantJugadores, Repositorio rep) {
+Juego::Jugadores Juego::repartirFichas(Variante v, Nat cantJugadores, Repositorio rep) {
     jugador::Mano mano(TAMANIO_ALFABETO,0);
     Ocurrencia fichasQuePusoDesde = {};
     Letra ficha;
@@ -40,7 +34,7 @@ juego::Jugadores juego::repartirFichas(variante v, Nat cantJugadores, Repositori
 
 
 }
-juego ::juego(Nat numJugadores, variante var, Repositorio rep):v(var){
+Juego ::Juego(Nat numJugadores, Variante var, Repositorio rep): v(var){
     numJug = numJugadores;
     _rep = rep;
     turnoActual = 0;
@@ -48,7 +42,7 @@ juego ::juego(Nat numJugadores, variante var, Repositorio rep):v(var){
     jugadores = repartirFichas(v, numJugadores, rep);
 
 }
-const  Nat juego :: numJugadores() const{
+const  Nat Juego :: numJugadores() const{
     return numJug;
 };
 /*

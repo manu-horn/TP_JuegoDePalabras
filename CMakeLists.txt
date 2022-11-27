@@ -36,7 +36,7 @@ if (WITH_GUI)
     target_link_libraries(simCityGUI ${SDL2_LIBRARIES})
 endif (WITH_GUI)
 
-add_executable(correrTests ${SOURCE_FILES} ${TEST_FILES} ${TESTS} src/variante.h src/juego.h src/servidor.h src/variante.cpp src/juego.cpp src/servidor.cpp src/string_map.h src/string_map.hpp)
+add_executable(correrTests ${SOURCE_FILES} ${TEST_FILES} ${TESTS} src/Fachada_Variante.cpp src/Variante.h src/Variante.cpp src/ConjTrie.h src/ConjTrie.cpp src/Servidor.h src/Servidor.cpp src/Juego.cpp src/Juego.h)
 
 # Necesitamos asociar los archivos del framework de testing
 target_link_libraries(correrTests gtest gtest_main)

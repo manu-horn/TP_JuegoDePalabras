@@ -1,21 +1,15 @@
-//
-// Created by clinux01 on 18/11/22.
-//
-
 #ifndef TP_JUEGODEPALABRAS_JUEGO_H
 #define TP_JUEGODEPALABRAS_JUEGO_H
 
+#include "Variante.h"
 
-#include "Tipos.h"
-#include "variante.h"
-#include "Letra.h"
 
-class juego {
+class Juego {
 public:
     const Nat numJugadores() const;
-    juego(Nat numJugadores, variante var, Repositorio rep);
+    Juego(Nat numJugadores, Variante var, Repositorio rep);
     void ubicar(Ocurrencia o);
-    const variante obtenerVariante() const;
+    const Variante obtenerVariante() const;
     const Nat obtenerTurno() const;
     const Nat obtenerPuntaje() const;
     const bool EsjugadaValida(Ocurrencia o) const;
@@ -32,7 +26,7 @@ private:
     };
     using Tablero = vector<vector<Casillero>>;
     Tablero tablero;
-    variante v;
+    Variante v;
     Nat numJug;
     Nat turnoActual;
     struct jugador{
@@ -44,7 +38,8 @@ private:
     };
     using Jugadores = vector<jugador>;
     Jugadores jugadores;
-    Jugadores repartirFichas(variante v, Nat cantJugadores, Repositorio rep);
+    Jugadores repartirFichas(Variante v, Nat cantJugadores, Repositorio rep);
     Tablero crearTablero(Nat tamano);
 };
+
 #endif //TP_JUEGODEPALABRAS_JUEGO_H
