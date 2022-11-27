@@ -41,10 +41,9 @@ void ConjTrie::insert(Palabra palabra) {
     }
     if(actual->definido == false){
         (actual->definido) = true;
-    }else{
-        (actual->definido) = true;
         _size++;
     }
+
     _claves.insert(palabra);
 }
 
