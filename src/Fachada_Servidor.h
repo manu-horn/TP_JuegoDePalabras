@@ -4,6 +4,7 @@
 #include "Tipos.h"
 #include "Notificacion.h"
 #include "Fachada_Variante.h"
+#include "Servidor.h"
 
 
 class Fachada_Servidor {
@@ -15,9 +16,9 @@ public:
      * Complejidad: O(tamanoTab**2 + TAMANIO_ALFABETO*cantJugadores + cantFichas*cantJugadores)
      */
     Fachada_Servidor(
-        Nat cantJugadores,
-        const Fachada_Variante& variante,
-        const Repositorio& r
+            Nat cantJugadores,
+            const Fachada_Variante& variante,
+            const Repositorio& r
     );
 
     /**
@@ -60,8 +61,7 @@ public:
     std::list<Notificacion> notificaciones(IdCliente id);
 
 private:
-    // Completar
+
 };
 
 #endif // FACHADA_SERVIDOR_H
-

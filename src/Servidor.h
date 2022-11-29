@@ -32,6 +32,7 @@ private:
     Nat _idNotif;
     notificaciones _notifs;
     Clientes _clientes;
+    Juego juego;
 };
 
 #endif //TP_JUEGODEPALABRAS_SERVIDOR_H

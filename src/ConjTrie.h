@@ -14,6 +14,7 @@ public:
     **/
     ConjTrie();
 
+
     /**
     DESTRUCTOR
     **/
@@ -36,6 +37,8 @@ public:
     int size() const;
 
     Nat obtenerLmax();
+
+    set<Palabra> palabras();
 
 private:
 

@@ -1,16 +1,16 @@
-#include "variante.h"
+#include "Variante.h"
 
 
 Variante::Variante(Nat tamanoTab, Nat cantFichas, const map<Letra, Nat> &puntajes,
                    const set<vector<Letra>> &palabrasLegitimas){
-
-    Abecedario abc(puntajes.size(),0);
+    tamanioTablero = tamanoTab;
+    fichasCant = cantFichas;
+    Abecedario abc(TAMANIO_ALFABETO,1);
     abecedario = abc;
     for(auto x: puntajes){
         abecedario[ord(x.first)] = x.second;
     }
 
-    string s;
 
     for (auto pal: palabrasLegitimas) {
 
@@ -38,3 +38,6 @@ bool Variante::palabraLegitima(const Palabra &palabra) const {
     return universal.count(palabra);
 }
 
+const Nat Variante::obtenerLmax() const {
+    return lmax;
+}

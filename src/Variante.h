@@ -9,16 +9,16 @@ class Variante {
 public:
 
     Variante(const Nat tamanoTab,
-            Nat cantFichas,
-            const map<Letra, Nat>& puntajes,
-            const set<Palabra>& palabrasLegitimas
+             Nat cantFichas,
+             const map<Letra, Nat>& puntajes,
+             const set<Palabra>& palabrasLegitimas
     );
 
     Nat tamanoTablero() const;
     Nat cantFichas() const;
     Nat puntajeLetra(Letra l) const;
     bool palabraLegitima(const Palabra& palabra) const;
-
+    const Nat obtenerLmax() const;
 
 private:
     Abecedario abecedario;

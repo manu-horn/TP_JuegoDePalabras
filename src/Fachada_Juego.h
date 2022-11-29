@@ -3,6 +3,7 @@
 
 #include "Tipos.h"
 #include "Fachada_Variante.h"
+#include "Juego.h"
 
 
 class Fachada_Juego {
@@ -75,6 +76,8 @@ public:
 
 private:
     // Completar
+    Juego juego;
+    Fachada_Variante fachaVar;
 };
 
 #endif // FACHADA_JUEGO_H

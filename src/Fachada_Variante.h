@@ -36,8 +36,13 @@ public:
      */
     bool palabraLegitima(const Palabra& palabra) const;
 
+    const map<Letra, Nat> obtPuntajes() const;
+    const set<vector<Letra>> obtPalabrasLeg() const;
+    const Variante& daVariante() const;
 private:
     Variante _var;
+    map<Letra, Nat> _puntajes;
+    set<vector<Letra>> _palabras;
 };
 
 #endif //FACHADA_VARIANTE_H
