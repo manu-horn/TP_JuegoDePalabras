@@ -8,7 +8,7 @@ class Juego {
 public:
     const Nat numJugadores() const;
     Juego(Nat numJugadores, const Variante& var, Repositorio rep);
-    void ubicar(Ocurrencia o);
+    multiset<Letra> ubicar(Ocurrencia o);
     const Variante obtenerVariante() const;
     const Nat obtenerTurno() const;
     const Nat obtenerPuntaje(Nat j);
@@ -21,6 +21,7 @@ public:
     const Nat cantidadLetrasOcurrencia(Letra l, Ocurrencia o) const;
     const Nat puntajeAnterior(Nat id)const;
     multiset<Letra> reponerN(Nat n,Nat id);
+    const vector<multiset<Letra>> damePrimeraMano() const;
 private:
     Repositorio _rep;
     struct Casillero{
@@ -37,20 +38,22 @@ private:
         using Mano = vector<int>;
         Mano mano;
         Nat puntaje;
-        Ocurrencia fichasQuePusoDesde;
+        set<Ocurrencia> fichasQuePusoDesde;
 
     };
+    vector<multiset<Letra>> _primeraMano;
     using Jugadores = vector<jugador>;
     Jugadores jugadores;
-    Jugadores repartirFichas(const Variante v, Nat cantJugadores, Repositorio rep);
+    Jugadores repartirFichas(Nat cantJugadores);
     Tablero crearTablero(Nat tamano);
-    void agregarPalabraHorizontal(ConjTrie conjPalabras, pair<Nat, Nat> prim, pair<Nat, Nat> ult);
-    void agregarPalabraVertical(ConjTrie conjPalabras, pair<Nat, Nat> arr, pair<Nat, Nat> abj);
-    Nat puntajeTotal(ConjTrie conjPalabras);
+    void agregarPalabraHorizontal(list<Palabra> &palabras, pair<Nat, Nat> prim, pair<Nat, Nat> ult);
+    void agregarPalabraVertical(list<Palabra> &palabras, pair<Nat, Nat> arr, pair<Nat, Nat> abj);
+    Nat puntajeTotal(list<Palabra> palabras);
     const bool enRango(Nat i, Nat j);
     const bool Horizontal(Ocurrencia o) const;
     const bool Vertical(Ocurrencia o) const;
     const bool sonContiguas(pair<Nat, Nat> prim, pair<Nat, Nat> ult, bool horizontal);
+    Nat puntajePalabra(Palabra palabra);
 };
 
 #endif //TP_JUEGODEPALABRAS_JUEGO_H

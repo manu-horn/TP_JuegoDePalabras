@@ -61,7 +61,7 @@ public:
     std::list<Notificacion> notificaciones(IdCliente id);
 
 private:
-
+Servidor servidor;
 };
 
 #endif // FACHADA_SERVIDOR_H

@@ -34,3 +34,4 @@ const set<vector<Letra>> Fachada_Variante::obtPalabrasLeg() const {
 const Variante& Fachada_Variante::daVariante() const{
     return _var;
 }
+

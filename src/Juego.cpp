@@ -10,9 +10,9 @@ Juego::Tablero Juego::crearTablero(Nat tamano) {
     return tablero;
 }
 
-Juego::Jugadores Juego::repartirFichas(const Variante v, Nat cantJugadores, Repositorio rep) {
+Juego::Jugadores Juego::repartirFichas(Nat cantJugadores) {
     jugador::Mano mano(TAMANIO_ALFABETO,0);
-    Ocurrencia fichasQuePusoDesde = {};
+    set<Ocurrencia> fichasQuePusoDesde = {};
     Letra ficha;
     jugador jugador1;
     jugador1.mano = mano;
@@ -21,10 +21,10 @@ Juego::Jugadores Juego::repartirFichas(const Variante v, Nat cantJugadores, Repo
     Jugadores jugadores1(cantJugadores, jugador1);
     for (int i = 0; i < cantJugadores; ++i) {
         for (int j = 0; j < v.cantFichas(); ++j) {
-            ficha = rep.front();
-            rep.pop_front();
-            Nat orden = ord(ficha);
+            ficha = _rep.front();
+            _rep.pop_front();
             jugadores1[i].mano[ord(ficha)]++;
+            _primeraMano[i].insert(ficha);
         }
     }
     return jugadores1;
@@ -32,20 +32,19 @@ Juego::Jugadores Juego::repartirFichas(const Variante v, Nat cantJugadores, Repo
 
 
 }
-Juego ::Juego(Nat numJugadores, const Variante &var, Repositorio rep): v(var){
+Juego ::Juego(Nat numJugadores, const Variante &var, Repositorio rep): v(var), _primeraMano(numJugadores,multiset<Letra>()){
     numJug = numJugadores;
     _rep = rep;
     turnoActual = 0;
     tablero = crearTablero(v.tamanoTablero());
-    jugadores = repartirFichas(v, numJugadores, rep);
-    Nat n = 0;
+    jugadores = repartirFichas(numJugadores);
 
 }
 const  Nat Juego :: numJugadores() const{
     return numJug;
 };
 
-void Juego::ubicar(Ocurrencia o) {
+multiset<Letra> Juego::ubicar(Ocurrencia o) {
     for (auto ficha: o) {
         Nat i = get<0>(ficha);
         Nat j = get<1>(ficha);
@@ -54,9 +53,12 @@ void Juego::ubicar(Ocurrencia o) {
         tablero[i][j].turnoJugado = turnoActual;
         tablero[i][j].ocupado = true;
         jugadores[obtenerTurno()].mano[ord(l)]--;
-        jugadores[obtenerTurno()].fichasQuePusoDesde.insert(ficha);
+
     }
+    jugadores[obtenerTurno()].fichasQuePusoDesde.insert(o);
+    multiset<Letra> repo = reponerN(o.size(),obtenerTurno());
     turnoActual++;
+    return repo;
 }
 
 const Variante Juego::obtenerVariante() const {
@@ -68,73 +70,90 @@ const Nat Juego::obtenerTurno() const {
 }
 
 const Nat Juego::obtenerPuntaje(Nat j) {
-    ConjTrie conjPalabras;
-    Ocurrencia fichasQuePusoDesde = jugadores[j].fichasQuePusoDesde;
+    list<Palabra> palabrasV;
+    list<Palabra> palabrasH;
+    set<Ocurrencia> fichasQuePusoDesde = jugadores[j].fichasQuePusoDesde;
     pair<Nat,Nat> prim;
     pair<Nat,Nat> ult;
     pair<Nat,Nat> arr;
     pair<Nat,Nat> abj;
     Nat turno;
+    Nat puntaje = 0;
+    Nat puntajeH = 0;
+    Nat puntajeV = 0;
 
-    for (auto ficha: fichasQuePusoDesde) {
-        prim = make_pair(get<0>(ficha),get<1>(ficha));
-        ult = make_pair(get<0>(ficha),get<1>(ficha));
-        arr = make_pair(get<0>(ficha),get<1>(ficha));
-        abj = make_pair(get<0>(ficha),get<1>(ficha));
-        turno = tablero[prim.first][prim.second].turnoJugado;
+    for(auto o: fichasQuePusoDesde){
+        puntajeH = 0;
+        puntajeV = 0;
+        for (auto ficha: o) {
+            prim = make_pair(get<0>(ficha),get<1>(ficha));
+            ult = make_pair(get<0>(ficha),get<1>(ficha));
+            arr = make_pair(get<0>(ficha),get<1>(ficha));
+            abj = make_pair(get<0>(ficha),get<1>(ficha));
+            turno = tablero[prim.first][prim.second].turnoJugado;
 
-        while(arr.first>0 and
-              tablero[arr.first - 1][arr.second].ocupado == true and
-              tablero[arr.first - 1][arr.second].turnoJugado <= turno){
-            arr.first--;
+            while(arr.first>0 and
+                  tablero[arr.first - 1][arr.second].ocupado == true and
+                  tablero[arr.first - 1][arr.second].turnoJugado <= turno){
+                arr.first--;
+            }
+            while(abj.first<v.tamanoTablero()-1 and
+                  tablero[abj.first + 1][abj.second].ocupado == true and
+                  tablero[abj.first + 1][abj.second].turnoJugado <= turno){
+                abj.first++;
+            }
+            while(prim.second>0 and
+                  tablero[prim.first][prim.second - 1].ocupado == true and
+                  tablero[prim.first][prim.second - 1].turnoJugado <= turno){
+                prim.second--;
+            }
+            while(ult.second<v.tamanoTablero()-1 and
+                  tablero[ult.first][ult.second + 1].ocupado == true and
+                  tablero[ult.first][ult.second + 1].turnoJugado <= turno){
+                ult.second++;
+            }
+            agregarPalabraHorizontal(palabrasH, prim, ult);
+            agregarPalabraVertical(palabrasV, arr, abj);
+            puntajeH += puntajePalabra(palabrasH.back());
+            puntajeV += puntajePalabra(palabrasV.back());
         }
-        while(abj.first<v.tamanoTablero()-1 and
-              tablero[abj.first + 1][abj.second].ocupado == true and
-              tablero[abj.first + 1][abj.second].turnoJugado <= turno){
-            abj.first++;
+        if (not(o.empty())){
+            if(Horizontal(o)){
+                puntajeH = puntajeH/o.size();
+            }else{
+                puntajeV = puntajeV/o.size();
+            }
         }
-        while(prim.second>0 and
-              tablero[prim.first][prim.second - 1].ocupado == true and
-              tablero[prim.first][prim.second - 1].turnoJugado <= turno){
-            prim.first--;
-        }
-        while(ult.second<v.tamanoTablero()-1 and
-              tablero[ult.first][ult.second + 1].ocupado == true and
-              tablero[ult.first][ult.second + 1].turnoJugado <= turno){
-            ult.first++;
-        }
-        Ocurrencia o = {};
-        agregarPalabraHorizontal(conjPalabras, prim, ult);
-        agregarPalabraVertical(conjPalabras, prim, ult);
+        puntaje = puntaje +  puntajeH + puntajeV;
         jugadores[j].fichasQuePusoDesde.clear();
-        jugadores[j].puntaje = jugadores[j].puntaje + puntajeTotal(conjPalabras);
-
     };
+
+    jugadores[j].puntaje += puntaje;
+
     return jugadores[j].puntaje;
 }
 
-void Juego::agregarPalabraHorizontal(ConjTrie conjPalabras, pair<Nat, Nat> prim, pair<Nat, Nat> ult) {
+void Juego::agregarPalabraHorizontal(list<Palabra> &palabras, pair<Nat, Nat> prim, pair<Nat, Nat> ult) {
     Palabra palabra = {};
     for (int i = prim.second; i <= ult.second; ++i) {
         palabra.push_back(tablero[prim.first][i].letra);
     }
-    conjPalabras.insert(palabra);
+    palabras.push_back(palabra);
 
 }
 
-void Juego::agregarPalabraVertical(ConjTrie conjPalabras, pair<Nat, Nat> arr, pair<Nat, Nat> abj) {
+void Juego::agregarPalabraVertical(list<Palabra> &palabras, pair<Nat, Nat> arr, pair<Nat, Nat> abj) {
     Palabra palabra = {};
     for (int i = arr.first; i <= abj.first; ++i) {
         palabra.push_back(tablero[i][arr.second].letra);
     }
-    conjPalabras.insert(palabra);
+    palabras.push_back(palabra);
 }
 
 
 
 
-Nat Juego::puntajeTotal(ConjTrie conjPalabras) {
-    set<Palabra> palabras = conjPalabras.palabras();
+Nat Juego::puntajeTotal(list<Palabra> palabras) {
     Nat res = 0;
     for (Palabra p: palabras) {
         for (Letra l: p) {
@@ -145,11 +164,15 @@ Nat Juego::puntajeTotal(ConjTrie conjPalabras) {
 }
 
 const bool Juego::EsjugadaValida(Ocurrencia o) {
+    if (o.empty()){
+        return true;
+    }
     Nat lmax = v.obtenerLmax();
+    bool pepito = v.daUniversal().count({'a','b','b'}) == 1;
     if (o.size() > lmax){
         return false;
     }
-    ConjTrie posiblesPalabras;
+    list<Palabra> posiblesPalabras;
     bool horizontal = Horizontal(o);
     bool vertical = Vertical(o);
     Nat n = v.tamanoTablero();
@@ -167,11 +190,12 @@ const bool Juego::EsjugadaValida(Ocurrencia o) {
         if(not(enRango(i,j))){
             return false;
         }
-        tablero[i][j].letra = letra;
-        tablero[i][j].ocupado = true;
         if(tablero[i][j].ocupado){
             return false;
         }
+        tablero[i][j].letra = letra;
+        tablero[i][j].ocupado = true;
+
         if(horizontal){
             prim = make_pair(i, min(j,prim.second));
             ult = make_pair(i, max(j,ult.second));
@@ -197,11 +221,11 @@ const bool Juego::EsjugadaValida(Ocurrencia o) {
         }
         while(prim.second>0 and
               tablero[prim.first][prim.second - 1].ocupado == true){
-            prim.first--;
+            prim.second--;
         }
         while(ult.second<v.tamanoTablero()-1 and
               tablero[ult.first][ult.second + 1].ocupado == true){
-            ult.first++;
+            ult.second++;
         }
         if(horizontal){
             agregarPalabraVertical(posiblesPalabras,arr,abj);
@@ -212,13 +236,13 @@ const bool Juego::EsjugadaValida(Ocurrencia o) {
     }
     if(horizontal){
         if(sonContiguas(prim, ult, horizontal)){
-            agregarPalabraVertical(posiblesPalabras,arr,abj);
+            agregarPalabraHorizontal(posiblesPalabras,prim,ult);
         }else{
             return false;
         }
     }else{
         if(sonContiguas(arr, abj, horizontal)){
-            agregarPalabraHorizontal(posiblesPalabras, prim, ult);
+            agregarPalabraVertical(posiblesPalabras, arr, abj);
         }else{
             return false;
         }
@@ -230,8 +254,8 @@ const bool Juego::EsjugadaValida(Ocurrencia o) {
         tablero[i][j].ocupado = false;
     }
 
-    for (Palabra pal: posiblesPalabras.palabras()) {
-        if (not(posiblesPalabras.count(pal))){
+    for (Palabra pal: posiblesPalabras) {
+        if (not(v.daUniversal().count(pal))){
             return false;
         }
     }
@@ -342,4 +366,16 @@ multiset<Letra> Juego::reponerN(Nat n,Nat id) {
     }
 
     return REpuestas;
+}
+
+const vector<multiset<Letra>> Juego::damePrimeraMano() const {
+    return _primeraMano;
+}
+
+Nat Juego::puntajePalabra(Palabra palabra) {
+    Nat res = 0;
+    for (Letra l: palabra) {
+        res = res + v.puntajeLetra(l);
+    }
+    return res;
 }

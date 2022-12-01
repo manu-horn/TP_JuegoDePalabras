@@ -19,6 +19,7 @@ public:
     Nat puntajeLetra(Letra l) const;
     bool palabraLegitima(const Palabra& palabra) const;
     const Nat obtenerLmax() const;
+    const ConjTrie& daUniversal() const;
 
 private:
     Abecedario abecedario;

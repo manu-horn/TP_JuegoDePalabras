@@ -31,6 +31,7 @@ Nat Variante::cantFichas() const {
 }
 
 Nat Variante::puntajeLetra(Letra l) const {
+
     return abecedario[ord(l)];
 }
 
@@ -40,4 +41,8 @@ bool Variante::palabraLegitima(const Palabra &palabra) const {
 
 const Nat Variante::obtenerLmax() const {
     return lmax;
+}
+
+const ConjTrie &Variante::daUniversal() const {
+    return universal;
 }

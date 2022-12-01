@@ -15,6 +15,8 @@ public:
      */
     Fachada_Juego(Nat k, const Fachada_Variante& v, const Repositorio& r);
 
+    ~Fachada_Juego();
+
     /**
      * Ubica una Ocurrencia o en el juego
      *
@@ -77,7 +79,7 @@ public:
 private:
     // Completar
     Juego juego;
-    Fachada_Variante fachaVar;
+    Fachada_Variante *fachaVar;
 };
 
 #endif // FACHADA_JUEGO_H

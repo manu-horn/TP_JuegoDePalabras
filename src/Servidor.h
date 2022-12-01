@@ -7,17 +7,18 @@
 
 class Servidor{
 public:
-    Servidor(Nat cantJug, Variante v, Repositorio rep);
-    void conectarCliente();
-    void consultarNotificaciones(Nat idCliente);
+    Servidor(Nat cantJug, const Variante &v, Repositorio rep);
+    IdCliente conectarCliente();
+    list<Notificacion> consultarNotificaciones(Nat idCliente);
     void recibirMensaje(Ocurrencia o, Nat idCliente);
     const Nat numeroClientesEsperados() const;
     const Nat numeroClientesConectados() const;
 
+
 private:
     struct notificacionesTodos{
         vector<tuple<Notificacion,Nat>> notificacionesServidor;
-        vector<int> leyoHasta;
+        vector<Nat> leyoHasta;
     };
 
     struct notificaciones{
@@ -33,6 +34,7 @@ private:
     notificaciones _notifs;
     Clientes _clientes;
     Juego juego;
+    const Variante& _variante;
 };
 
 #endif //TP_JUEGODEPALABRAS_SERVIDOR_H

@@ -1,7 +1,7 @@
 #include "Fachada_Juego.h"
 
-Fachada_Juego::Fachada_Juego(Nat k, const Fachada_Variante &v, const Repositorio &r):fachaVar(v), juego(k,v.daVariante(),r)
-{
+Fachada_Juego::Fachada_Juego(Nat k, const Fachada_Variante &v, const Repositorio &r): juego(k,v.daVariante(),r)
+{    fachaVar = new Fachada_Variante(v.daVariante().tamanoTablero(), v.daVariante().cantFichas(), v.obtPuntajes(), v.obtPalabrasLeg());
 }
 
 void Fachada_Juego::ubicar(const Ocurrencia &o) {
@@ -13,7 +13,7 @@ IdCliente Fachada_Juego::turno() {
 }
 
 const Fachada_Variante &Fachada_Juego::variante() {
-    return fachaVar;
+    return *fachaVar;
 }
 
 bool Fachada_Juego::jugadaValida(const Ocurrencia &o) {
@@ -34,4 +34,8 @@ Nat Fachada_Juego::puntaje(IdCliente id) {
 
 Nat Fachada_Juego::cantFicha(IdCliente id, Letra l) {
     return juego.cuantasDeEstaTiene(l,id);
+}
+
+Fachada_Juego::~Fachada_Juego() {
+    delete fachaVar;
 }
