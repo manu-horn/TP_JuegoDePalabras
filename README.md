@@ -1,4 +1,4 @@
-## Leer tp2.pdf para ver consigna
+# Leer tp2.pdf para ver consigna
 
 # Para los tests
 
