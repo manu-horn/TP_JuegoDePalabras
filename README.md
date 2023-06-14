@@ -1,3 +1,5 @@
+## Leer tp2.pdf para ver consigna
+
 # Para los tests
 
 ## Opción 1: Compilar y Ejecutar desde CLion
